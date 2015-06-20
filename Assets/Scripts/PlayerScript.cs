@@ -55,8 +55,15 @@ public class PlayerScript : MonoBehaviour {
 		gameObject.transform.Translate( new Vector3(hor * realSpeed, ver * realSpeed, 0));
 	}
 
-
 	void FixedUpdate () {
+		Vector3 MouseCoord = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+		Move ();
+		
+		Rotate(MouseCoord) ;
+	}
+
+	void Update () {
 
 		Vector3 MouseCoord = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		if (Input.GetButtonDown("Fire2"))
@@ -89,7 +96,7 @@ public class PlayerScript : MonoBehaviour {
 				}
 			}
 		}
-		if (Input.GetButtonDown ("Fire1")) {
+		if (Input.GetButtonDown("Fire1")) {
 			if (_hasweapon)
 			{
 				_weapon.GetComponent<WeaponScript>().Shoot();
@@ -97,21 +104,13 @@ public class PlayerScript : MonoBehaviour {
 
 		}
 
-		Move ();
-
-		Rotate(MouseCoord) ;
 	}
 
-	public void SetHead(Sprite s) {
-		_sprites[0].sprite = s;
-	}	
+	public void SetHead(Sprite s) { _sprites[0].sprite = s;	}	
 
-	public void SetWeapon(Sprite s) {
-		_sprites[1].sprite = s;
-	}	
+	public void SetWeapon(Sprite s) { _sprites[1].sprite = s; }	
 
-	public void SetBody(Sprite s) {
-		_sprites[2].sprite = s;
-	}	
+	public void SetBody(Sprite s) { _sprites[2].sprite = s;	}	
 
+	public int GetAmmo() { return _weapon.GetComponent<WeaponScript>().GetAmmo(); }
 }
