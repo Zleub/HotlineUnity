@@ -65,10 +65,15 @@ public class PlayerScript : MonoBehaviour {
 		{
 			GameObject clone = GameObject.Instantiate(_weapon);
 			clone.gameObject.transform.position = gameObject.transform.position;
-			clone.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(camera.x, camera.y));
+			clone.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(camera.x, camera.y), ForceMode2D.Impulse);
 //			_weapon = null;
 		}
-
+		if (Input.GetButtonDown ("Fire2")) {
+			if (_hasweapon)
+			{
+				_weapon.GetComponent<WeaponScript>().Shoot();
+			}
+		}
 
 		Move ();
 
