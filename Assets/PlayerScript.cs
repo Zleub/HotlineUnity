@@ -63,26 +63,29 @@ public class PlayerScript : MonoBehaviour {
 		{
 			if (_hasweapon)
 			{
-				GameObject clone = GameObject.Instantiate(_weapon);
-				clone.gameObject.layer = LayerMask.NameToLayer("Weapon");
-				clone.gameObject.transform.position = gameObject.transform.position;
-
+//				GameObject clone = GameObject.Instantiate(_weapon);
+//				clone.gameObject.layer = LayerMask.NameToLayer("Weapon");
+				_weapon.GetComponent<WeaponScript>().gameObject.transform.position = gameObject.transform.position;
+				_weapon.GetComponent<WeaponScript>().GetComponent<SpriteRenderer>().sprite = _weapon.GetComponent<WeaponScript>()._sprites[0];
 
 				Vector3 test = MouseCoord - gameObject.transform.position;
 				Vector2 normal = new Vector2 (test.normalized.x, test.normalized.y);
-				clone.gameObject.GetComponent<Rigidbody2D>().AddForce(normal * 50, ForceMode2D.Impulse);
+				_weapon.GetComponent<WeaponScript>().gameObject.GetComponent<Rigidbody2D>().AddForce(normal * 50, ForceMode2D.Impulse);
 				_weapon = null;
 				_hasweapon = false;
+				SetWeapon(null);
 			}
 			else
 			{
 				Vector3 caca = gameObject.transform.position;
 				caca.z -= 10;
-				RaycastHit2D test = Physics2D.Raycast(caca, Vector2.zero,
-				                                      Mathf.Infinity, LayerMask.NameToLayer("Weapon"));
-				if (test)
+				RaycastHit2D hit = Physics2D.Raycast(caca, Vector2.zero, Mathf.Infinity, 1<<11);
+				if (hit)
 				{
-					print(test.collider.gameObject.name);
+					_weapon = hit.collider.gameObject;
+					_weapon.GetComponent<WeaponScript>().GetComponent<SpriteRenderer>().sprite = null;
+					_hasweapon = true;
+					SetWeapon(_weapon.GetComponent<WeaponScript>()._sprites[1]);
 				}
 			}
 		}
