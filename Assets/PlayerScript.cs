@@ -8,15 +8,13 @@ public class PlayerScript : MonoBehaviour {
 
 	private SpriteRenderer[]	_sprites;
 	private Animator			_animator;
-	public bool					_hasweapon = true;
+	public bool					_hasweapon = false;
 	public GameObject			_weapon;
 
 	void Start () {
 		ps = this;
 		_sprites = gameObject.GetComponentsInChildren<SpriteRenderer>();
 		_animator = gameObject.GetComponentInChildren<Animator>();
-
-		SetWeapon(_weapon.GetComponent<WeaponScript>()._sprites[1]);
 	}
 	
 	void Rotate (Vector3 target) {
@@ -60,24 +58,45 @@ public class PlayerScript : MonoBehaviour {
 
 	void FixedUpdate () {
 
-		Vector3 camera = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		if (Input.GetButtonDown("Fire1") && _hasweapon == true)
+		Vector3 MouseCoord = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		if (Input.GetButtonDown("Fire2"))
 		{
-			GameObject clone = GameObject.Instantiate(_weapon);
-			clone.gameObject.transform.position = gameObject.transform.position;
-			clone.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(camera.x, camera.y), ForceMode2D.Impulse);
-//			_weapon = null;
+			if (_hasweapon)
+			{
+				GameObject clone = GameObject.Instantiate(_weapon);
+				clone.gameObject.layer = LayerMask.NameToLayer("Weapon");
+				clone.gameObject.transform.position = gameObject.transform.position;
+
+
+				Vector3 test = MouseCoord - gameObject.transform.position;
+				Vector2 normal = new Vector2 (test.normalized.x, test.normalized.y);
+				clone.gameObject.GetComponent<Rigidbody2D>().AddForce(normal * 50, ForceMode2D.Impulse);
+				_weapon = null;
+				_hasweapon = false;
+			}
+			else
+			{
+				Vector3 caca = gameObject.transform.position;
+				caca.z -= 10;
+				RaycastHit2D test = Physics2D.Raycast(caca, Vector2.zero,
+				                                      Mathf.Infinity, LayerMask.NameToLayer("Weapon"));
+				if (test)
+				{
+					print(test.collider.gameObject.name);
+				}
+			}
 		}
-		if (Input.GetButtonDown ("Fire2")) {
+		if (Input.GetButtonDown ("Fire1")) {
 			if (_hasweapon)
 			{
 				_weapon.GetComponent<WeaponScript>().Shoot();
 			}
+
 		}
 
 		Move ();
 
-		Rotate(camera) ;
+		Rotate(MouseCoord) ;
 	}
 
 	public void SetHead(Sprite s) {
