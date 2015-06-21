@@ -7,7 +7,10 @@ public class WeaponScript : MonoBehaviour {
 	public Sprite[] 	_sprites;
 	public int			_clip;
 	public string		_name;
-	// Use this for initialization
+	public float		_delay;
+
+	private float		_time = 0;
+	
 	void Start () {
 		gameObject.GetComponent<SpriteRenderer>().sprite = _sprites[0];
 
@@ -15,15 +18,15 @@ public class WeaponScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
+		_time += Time.deltaTime;
 	}
 	
 	public int Shoot()
 	{
-		if (AmmoPrefab) {
+		if (AmmoPrefab && _time > _delay) {
 			if (_clip == 0) {
-				print ("Out of Ammo");
 				GetComponents<AudioSource> () [1].PlayDelayed (0f);
+				print ("Out of Ammo");
 				return 0;
 
 			}
@@ -42,6 +45,12 @@ public class WeaponScript : MonoBehaviour {
 			Quaternion rotation = Quaternion.Euler (0, 0, Mathf.Atan2 (test.y, test.x) * Mathf.Rad2Deg);
 			clone.gameObject.transform.rotation = rotation;
 			clone.GetComponent<Rigidbody2D> ().velocity = new Vector2 (test.x, test.y).normalized * 50;
+
+			clone.GetComponent<Rigidbody2D>().interpolation = RigidbodyInterpolation2D.Interpolate;
+			clone.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+//			clone.GetComponent<Rigidbody2D> ().AddForce( new Vector2 (test.x, test.y) * 5 );
+			_time = 0;
 			return 1;
 		} else {
 			GetComponents<AudioSource> () [0].PlayDelayed (0f);

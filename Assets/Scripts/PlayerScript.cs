@@ -61,8 +61,11 @@ public class PlayerScript : MonoBehaviour {
 			_animator.SetBool("Walking", true);
 
 		float realSpeed = Time.deltaTime * speed;
-		
-		gameObject.transform.Translate( new Vector3(hor * realSpeed, ver * realSpeed, 0));
+
+		Vector2 t = new Vector2(hor, ver);
+
+//		gameObject.transform.Translate( new Vector3(hor * realSpeed, ver * realSpeed, 0));
+		gameObject.GetComponent<Rigidbody2D>().MovePosition(gameObject.GetComponent<Rigidbody2D>().position + t * realSpeed);
 	}
 
 	void FixedUpdate () {

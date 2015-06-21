@@ -25,5 +25,8 @@ public class AmmoScript : MonoBehaviour {
 			print ("Wall");
 			Destroy (this.gameObject);
 		}
+		else {
+			print (coll.gameObject.name);
+		}
 	}
 }
