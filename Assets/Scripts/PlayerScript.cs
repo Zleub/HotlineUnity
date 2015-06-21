@@ -16,26 +16,36 @@ public class PlayerScript : MonoBehaviour {
 		_sprites = gameObject.GetComponentsInChildren<SpriteRenderer>();
 		_animator = gameObject.GetComponentInChildren<Animator>();
 	}
-	
-	void Rotate (Vector3 target) {
 
-		Vector3 diff = target - transform.position;
-		diff.Normalize();
-		float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-
+	void Rotate (Vector3 target)
+	{
 		foreach (SpriteRenderer _sprite in _sprites)
-			if (_sprite.name == "Weapon")
-			{
-				Vector3 diff1 = target - _sprite.gameObject.transform.position;
-				diff1.Normalize();
-				float rot_z1 = Mathf.Atan2(diff1.y, diff1.x) * Mathf.Rad2Deg;
-
-				_sprite.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z1 + 90);
-			}
-			else
-				_sprite.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z + 90);
-
+		{
+			target.z = _sprite.gameObject.transform.position.z;
+			_sprite.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward, _sprite.gameObject.transform.position - target);
+		}
 	}
+
+
+//	void Rotate (Vector3 target) {
+//
+//		Vector3 diff = target - transform.position;
+//		diff.Normalize();
+//		float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+//
+//		foreach (SpriteRenderer _sprite in _sprites)
+//			if (_sprite.name == "Weapon")
+//			{
+//				Vector3 diff1 = target - _sprite.gameObject.transform.position;
+//				diff1.Normalize();
+//				float rot_z1 = Mathf.Atan2(diff1.y, diff1.x) * Mathf.Rad2Deg;
+//
+//				_sprite.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z1 + 90);
+//			}
+//			else
+//				_sprite.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z + 90);
+//
+//	}
 
 	void Move()
 	{
@@ -61,11 +71,7 @@ public class PlayerScript : MonoBehaviour {
 		Move ();
 		
 		Rotate(MouseCoord) ;
-	}
 
-	void Update () {
-
-		Vector3 MouseCoord = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		if (Input.GetButtonDown("Fire2"))
 		{
 			if (_hasweapon)
