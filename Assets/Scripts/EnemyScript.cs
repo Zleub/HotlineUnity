@@ -3,8 +3,9 @@ using System.Collections;
 
 public class EnemyScript : MonoBehaviour {
 	
-	public float				speed = 10f;
+	public float				speed = 0.3f;
 	
+	public Sprite				_alertSprite;
 	private SpriteRenderer[]	_sprites;
 	private Animator			_animator;
 	public bool					_hasweapon = false;
@@ -15,7 +16,7 @@ public class EnemyScript : MonoBehaviour {
 		_animator = gameObject.GetComponentInChildren<Animator>();
 	}
 	
-	void Rotate (Vector3 target)
+	public void Rotate (Vector3 target)
 	{
 		foreach (SpriteRenderer _sprite in _sprites)
 		{
@@ -24,16 +25,16 @@ public class EnemyScript : MonoBehaviour {
 		}
 	}
 
-	void Move()
+	public void Move(Vector2 movement)
 	{
-
+		gameObject.GetComponent<Rigidbody2D>().MovePosition(movement);
 	}
 	
 	void FixedUpdate () {
-
 		
 	}
-	
+
+
 	public void SetHead(Sprite s) { _sprites[0].sprite = s;	}	
 	
 	public void SetWeapon(Sprite s) { _sprites[1].sprite = s; }	
