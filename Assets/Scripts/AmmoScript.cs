@@ -17,12 +17,13 @@ public class AmmoScript : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D coll)
 	{
-		if (coll.gameObject.tag == "Character" && !friendly)
-			print ("player got hit");
-		if (coll.gameObject.tag == "Enemy" && friendly)
-			print ("enemy got hit");
+		if (coll.gameObject.name == "Character" && gameObject.layer == 12)
+			Application.LoadLevel(Application.loadedLevel);
+		if (coll.gameObject.name == "Enemy" && gameObject.layer == 14) {
+			Destroy(coll.gameObject.GetComponentInParent<EnemyManagerScript>().gameObject);
+			Destroy(gameObject);
+		}
 		if (coll.gameObject.layer ==  9) {
-			print ("Wall");
 			Destroy (this.gameObject);
 		}
 		else {

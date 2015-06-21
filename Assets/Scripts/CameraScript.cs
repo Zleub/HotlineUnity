@@ -15,5 +15,7 @@ public class CameraScript : MonoBehaviour {
 			PlayerScript.ps.gameObject.transform.position.y,
 			-10f
 		);
+		if (Input.GetKeyDown("r"))
+			Application.LoadLevel(Application.loadedLevel);
 	}
 }

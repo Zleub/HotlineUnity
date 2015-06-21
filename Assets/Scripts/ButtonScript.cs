@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ButtonScript : MonoBehaviour {
 
-
+	public static int	lvl = 1;
 	public Texture2D	cursorTexture;
 	public Vector2 		hotSpot = Vector2.zero;
 	public CursorMode	cursorMode = CursorMode.Auto;
@@ -20,7 +20,8 @@ public class ButtonScript : MonoBehaviour {
 	}
 
 	public void StartGame() {
-		Debug.Log ("GameStart");
+		Application.LoadLevel(lvl);
+		lvl += 1;
 	}
 
 	public void QuitGame() {

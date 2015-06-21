@@ -7,53 +7,55 @@ public class WeaponScript : MonoBehaviour {
 	public Sprite[] 	_sprites;
 	public int			_clip;
 	public string		_name;
-	public float		_delay;
+	public float		_delay = 5f;
 
-	private float		_time = 0;
+	public float		_time = 0;
 	
 	void Start () {
 		gameObject.GetComponent<SpriteRenderer>().sprite = _sprites[0];
-
+		_delay =5f;
 	} 
 
 	// Update is called once per frame
 	void Update () {
-		_time += Time.deltaTime;
+		_time += Time.deltaTime * 1000;
 	}
 	
-	public int Shoot()
+	public int Shoot(Vector3 pos, Quaternion rot, Vector3 target, LayerMask l)
 	{
-		if (AmmoPrefab && _time > _delay) {
+		if (AmmoPrefab) {
 			if (_clip == 0) {
-				GetComponents<AudioSource> () [1].PlayDelayed (0f);
+				AudioSourceScript.asc.Play();
 				print ("Out of Ammo");
 				return 0;
 
 			}
 			_clip -= 1;
-			GetComponents<AudioSource> () [0].PlayDelayed (0f);
-			GameObject Player = PlayerScript.ps.gameObject;
-			Vector3 MouseCoord = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+			AudioSourceScript.asc.Play();
+//			GameObject Player = PlayerScript.ps.gameObject;
+//			Vector3 MouseCoord = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			GameObject clone = GameObject.Instantiate (AmmoPrefab);
 
-			clone.transform.position = Player.transform.position;
-			clone.transform.rotation = Player.GetComponentsInChildren<SpriteRenderer> () [1].gameObject.transform.rotation;
+			clone.transform.position = pos;
+//				clone.GetComponent<AmmoScript>().friendly = f;
+			clone.transform.rotation = rot;
 			clone.GetComponent<SpriteRenderer> ().sprite = _sprites [2];
 
 
-			Vector3 test = (MouseCoord - Player.transform.position).normalized;
+			Vector3 test = (target - pos).normalized;
 			Quaternion rotation = Quaternion.Euler (0, 0, Mathf.Atan2 (test.y, test.x) * Mathf.Rad2Deg);
 			clone.gameObject.transform.rotation = rotation;
-			clone.GetComponent<Rigidbody2D> ().velocity = new Vector2 (test.x, test.y).normalized * 50;
+			clone.GetComponent<Rigidbody2D> ().velocity = new Vector2 (test.x, test.y).normalized * 5;
 
 			clone.GetComponent<Rigidbody2D>().interpolation = RigidbodyInterpolation2D.Interpolate;
 			clone.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+			clone.layer = l;
 
 //			clone.GetComponent<Rigidbody2D> ().AddForce( new Vector2 (test.x, test.y) * 5 );
 			_time = 0;
 			return 1;
 		} else {
-			GetComponents<AudioSource> () [0].PlayDelayed (0f);
+			AudioSourceScript.asc.Play();
 			return 1;
 		}
 	}

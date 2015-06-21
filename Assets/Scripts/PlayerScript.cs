@@ -87,7 +87,7 @@ public class PlayerScript : MonoBehaviour {
 		if (Input.GetButtonDown("Fire1")) {
 			if (_hasweapon)
 			{
-				_weapon.GetComponent<WeaponScript>().Shoot();
+				_weapon.GetComponent<WeaponScript>().Shoot(gameObject.transform.position, gameObject.transform.rotation, Camera.main.ScreenToWorldPoint (Input.mousePosition), 14);
 			}
 
 		}
@@ -100,5 +100,9 @@ public class PlayerScript : MonoBehaviour {
 
 	public void SetBody(Sprite s) { _sprites[2].sprite = s;	}	
 
-	public int GetAmmo() { return _weapon.GetComponent<WeaponScript>().GetAmmo(); }
+	public int GetAmmo() {
+		if (_weapon)
+			return _weapon.GetComponent<WeaponScript>().GetAmmo();
+		return 0;
+	}
 }

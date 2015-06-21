@@ -14,6 +14,7 @@ public class EnemyScript : MonoBehaviour {
 	void Start () {
 		_sprites = gameObject.GetComponentsInChildren<SpriteRenderer>();
 		_animator = gameObject.GetComponentInChildren<Animator>();
+		SetWeapon(_weapon.GetComponent<WeaponScript>()._sprites[1]);
 	}
 	
 	public void Rotate (Vector3 target)
